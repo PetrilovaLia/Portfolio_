@@ -1,0 +1,39 @@
+@keyframes movingleft{
+    from{
+        background-position: 7000%;
+    }
+    to{
+        background-position: 0%;
+    }
+}
+
+
+#sahara{
+    position: absolute;
+    background-image: url("./assets/ground.png");
+    height: 72px;
+    width: 100%;
+    animation: movingleft 600s infinite linear;
+    bottom: 0;
+}
+
+.dino{
+    background-image: url("./assets/dino60.png");
+    height: 58px;
+    width: 60px;  
+    position: absolute;
+    bottom: 30px;
+}
+
+.prekazky{
+    background-image: url("./assets/cactus2v.png");
+    width: 48px;
+    height: 70px;
+    position: absolute;
+    bottom: 35px;
+}
+
+h2{
+    margin: 0;
+    padding: 0;
+}
