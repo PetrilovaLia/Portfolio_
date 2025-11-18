@@ -1,0 +1,61 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(51, 84, 84);
+}
+
+.calc{
+    background-color: rgb(211, 221, 221);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.butoniky{
+    width: 232px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+button{
+    background-color: rgb(131, 129, 129);
+    border: none;
+    color: #fff;
+    font-size: 40px;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    margin: 4px;
+}
+button:hover{
+    background-color: rgb(111, 110, 100);
+}
+button:active{
+    background-color: rgb(232, 232, 232);
+}
+
+.obrazovka{
+    width: 224px;
+    background-color: rgb(187, 210, 187);
+    font-size: 40px;
+    text-align: end;
+    padding: 4px;
+}
+#rovnaSa{
+    background-color: rgb(122, 27, 27);
+}
+
+#rovnaSa:hover{
+    background-color: rgb(75, 17, 17);
+}
+#clear{
+    background-color: rgb(219, 185, 122);
+    width: 100%;
+    font-size: 30px;
+}
+
+#clear:hover{
+    background-color: rgb(162, 135, 85);
+
+}
