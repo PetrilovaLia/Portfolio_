@@ -41,6 +41,8 @@ button:active{
     font-size: 40px;
     text-align: end;
     padding: 4px;
+    overflow: scroll;
+
 }
 #rovnaSa{
     background-color: rgb(122, 27, 27);
