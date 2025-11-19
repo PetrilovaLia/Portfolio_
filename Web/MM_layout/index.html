@@ -17,84 +17,161 @@
 
 <body>
     <header class="headerbck">
-        <nav class="navbar">
-            <div class="logoArea">
-                <div class="logo">
-                    <a href="#" id=""><img src="./assets/lenlogo.png" alt="MM logo" width="31px" height="30px"/></a>
-                </div>
+        <nav>
+            <div class="logoBoxik">
+                <img src="./assets/logoincircle.jpg" alt="Logo" id="logoImg">
             </div>
 
-            <div class="navLinks">
-                <a href="index.html">DOMOV</a>
-                <a href="#">PROJEKTY</a>
-                <a href="kontakty.html">KONTAKT</a>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
-            <div class="mediaLinks">
-                <a href="https://www.instagram.com/mm_architects_/" target="_blank"><img src="./assets/insta.png" alt="MM logo" width="24px" height="24px"/></a>
-                <a href="https://www.facebook.com/MMarchitectsDesign/photos?locale=sk_SK" target="_blank"><img src="./assets/fb.png" alt="MM logo" width="24px" height="24px"/></a>
+            <ul class="NavMenu" id="navMenu">
+                <li><a href="#domov">Domov</a></li>
+                <li><a href="#portfolio">Portfólio</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+
+            <div class="socialIcons">
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+                    <img src="./assets/fb.png" alt="" width="28px" height="28px">
+                </a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                    <img src="./assets/insta.png" alt="" width="28px" height="28px">
+                </a>
             </div>
         </nav>
+
 
         <h1 id="h1header">MM Architects</h1>
         <p class="slogan">Kvalita v každom detaile, elegancia v každom priestore</p>
     </header>
 
-    
-    <section class="galleryProjekty">
+    <main>
+        <section class="galleryProjekty">
 
-        <button class="navButton prev" id="prevBtn">
-            <svg viewBox="0 0 24 24">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-            </svg>
-        </button>
+            <button class="navButton prev" id="prevBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
 
-        <div class="galleryProjects" id="Gprojects">
-            <div class="galleryList" id="Glist">
-                <div class="galleryItem">
-                    <img src="./assets/gallery/makov1.jpg" alt="" class="galleryImg" data-url="kontakty.html">
-                    <div class="galleryCaption">Lorem Ipsum</div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/gallery/bungalov.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Lorem Ipsum</div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/gallery/pool3.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Wellness zóna</div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/gallery/radovka4.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Urbanistický návrh radovej zástavby</div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/gallery/interier5.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Apartmány vo Vysokých Tatrách</div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/gallery/hillside6.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Interiérový návrh v apartmánovom dome Hillside </div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/gallery/ordinacia7.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Interiérový návrh ambulancie</div>
-                </div>
-                <div class="galleryItem">
-                    <img src="./assets/div.jpg" alt="" class="galleryImg">
-                    <div class="galleryCaption">Zasadacia miestnosť nemocnice v Dolnom Kubíne</div>
+            <div class="galleryProjects" id="Gprojects">
+                <div class="galleryList" id="Glist">
+                    <div class="galleryItem">
+                        <a href="https://www.facebook.com/photo/?fbid=1481926970026235&set=pb.100046268391369.-2207520000">
+                            <img src="./assets/gallery/makov1.jpg" alt="" class="galleryImg">
+                        </a>
+                        <div class="galleryCaption">Lorem Ipsum</div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/gallery/bungalov.jpg" alt="" class="galleryImg">
+                        </a>
+                        
+                        <div class="galleryCaption">Lorem Ipsum</div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/gallery/pool3.jpg" alt="" class="galleryImg">
+                        </a>
+                        
+                        <div class="galleryCaption">Wellness zóna</div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/gallery/radovka4.jpg" alt="" class="galleryImg">
+                        </a>
+                        
+                        <div class="galleryCaption">Urbanistický návrh radovej zástavby</div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/gallery/interier5.jpg" alt="" class="galleryImg">
+                        </a>
+                        <div class="galleryCaption">Apartmány vo Vysokých Tatrách</div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/gallery/hillside6.jpg" alt="" class="galleryImg">
+                        </a>
+                        <div class="galleryCaption">Interiérový návrh v apartmánovom dome Hillside </div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/gallery/ordinacia7.jpg" alt="" class="galleryImg">
+                        </a>
+                        <div class="galleryCaption">Interiérový návrh ambulancie</div>
+                    </div>
+                    <div class="galleryItem">
+                        <a href="">
+                            <img src="./assets/div.jpg" alt="" class="galleryImg">
+                        </a>
+                        <div class="galleryCaption">Zasadacia miestnosť nemocnice v Dolnom Kubíne</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <button class="navButton next" id="nextBtn">
-            <svg viewBox="0 0 24 24">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-            </svg>
-        </button>
+            <button class="navButton next" id="nextBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </button>
 
-        <div class="gallery-indicators" id="indicators"></div>
-    </section>
-   
+        </section>
+
+        <section class="mapkaGrid" id="kontakt">
+            <div class="mapka">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606.131737012362!2d19.294775676022034!3d49.21702867540175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4715b1d784b560fb%3A0xe50c82410fec0b57!2s7%2C%20Aleja%20Slobody%202245%2F7B%2C%20026%2001%20Doln%C3%BD%20Kub%C3%ADn!5e0!3m2!1ssk!2ssk!4v1763407810366!5m2!1ssk!2ssk" 
+                width="600" height="450" style="border-radius: 15px; border: none; width: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          
+            <address class="addressDiv">
+                <h1 class="addH1">Kontaktujte nás</h1>
+                
+                <div class="contactInfo">
+                    <div class="contactItem">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                        <div class="contactDetails">
+                            <p>Aleja Slobody 2245/7</p>
+                            <p>Dolný Kubín, 026 01</p>
+                            <p>Slovensko</p>
+                        </div>
+                    </div>
+
+                    <div class="contactItem">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <div class="contactDetails">
+                            <p>+421 907 603 784</p>
+                        </div>
+                    </div>
+
+                    <div class="contactItem">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="contactDetails">
+                            <p>mmarchitects.info@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </address>
+        </section>
+    </main>
 
     <footer class="pata">
         <p>MM | ARCHITECTS </p>

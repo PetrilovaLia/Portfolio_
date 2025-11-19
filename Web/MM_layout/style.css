@@ -4,51 +4,124 @@
     box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  background-color: #A39382;
+body {
+    scroll-behavior: smooth;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #A39382;
 }
 
-.navbar {
+
+nav {
+    /* background-color: #f0ebe5; */
+    padding: 20px 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fbf7f4;
-    border-radius: 8px;
-    margin: 20px;
-    padding: 10px 30px;
-    /* tieniky */
-    box-shadow: -1px 0px 45px 13px rgba(0,0,0,0.43);
-    -webkit-box-shadow: -1px 0px 45px 13px rgba(0,0,0,0.43);
-    -moz-box-shadow: -1px 0px 45px 13px rgba(0,0,0,0.43);
+    position: relative;
+    /* border-radius: 15px; */
+    margin: 10px;
 }
 
-nav a {
+.logoBoxik{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.logoBoxik:hover {
+    transform: scale(1.05);
+}
+
+.logoBoxik img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.NavMenu{
+    display: flex;
+    gap: 60px;
+    list-style: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.NavMenu li a {
     text-decoration: none;
-    color: #37353E;
-    font-size: 18px;
-
+    color: #333;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: color 0.3s ease;
+    position: relative;
+}
+.NavMenu li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    transition: width 0.3s ease;
 }
 
-nav a:hover {
-  text-decoration: none;
-  color: rgb(146, 109, 71);
+.NavMenu li a:hover {
+    color: #000;
 }
 
-.navLinks {
+.NavMenu li a:hover::after {
+    width: 100%;
+}
+
+.socialIcons {
     display: flex;
-    gap: 45px;
+    gap: 25px;
     align-items: center;
 }
 
-.mediaLinks{
+.socialIcons a {
+    color: #333;
+    font-size: 28px;
+    transition: all 0.3s ease;
     display: flex;
-    gap: 10px;
     align-items: center;
+    justify-content: center;
+}
+
+.socialIcons a:hover {
+    color: #000;
+    transform: scale(1.1);
+}
+
+
+
+/* burger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 2px;
+    background-color: #333;
+    transition: all 0.3s ease;
 }
 
 .headerbck{
@@ -75,7 +148,7 @@ nav a:hover {
     margin-left: 25px;
 }
 
-/* Galéria projektov */
+/* jednotlive projekty - gallery */
 
 .galleryProjekty {
     max-width: 100%;
@@ -110,14 +183,14 @@ nav a:hover {
     position: relative;
     overflow: hidden;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .galleryImg:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
 
 .galleryCaption {
     padding: 0;
@@ -129,7 +202,7 @@ nav a:hover {
     background: transparent;
 }
 
-/* Navigačné tlačidlá */
+/* navigacne btn */
 .navButton {
     position: absolute;
     top: 50%;
@@ -176,103 +249,108 @@ nav a:hover {
     fill: #333;
 }
 
-/* oblast */
-.gallery-indicators {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 30px;
-}
-
-.indicator {
-    width: 8px;
-    height: 8px;
-    background: #ddd;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.indicator.active {
-    background: #333;
-    width: 24px;
-    border-radius: 4px;
-}
-
-.indicator:hover {
-    background: #000;
-}
-
 /* pata stranky */
 .pata{
     background-color: #E5DED2;
-    margin: 35px 20px 10px 15px;
+    margin: 35px 15px 10px 15px;
     padding: 15px;
-    border-radius: 15px;
+    border-radius: 10px;
     text-align: center;
 }
 
 /* cast kontakty */
-.mapka-grid{
+.mapkaGrid{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px; 
-    margin: 35px 20px 10px 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px;
 }
 
 .mapka{
-     grid-area: 1 / 1 / 2 / 2;
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 10px;
      -webkit-filter: grayscale(100%);
        -moz-filter: grayscale(100%);
         -ms-filter: grayscale(100%);
          -o-filter: grayscale(100%);
             filter: grayscale(100%);    
 }
-.kont-popis{
-    grid-area: 1 / 2 / 2 / 3;
-    background-color: #E5DED2;
-    border-radius: 15px;
-    font-size: 28px;
-    font-family: "Cormorant Garamond", serif;
-    font-optical-sizing: auto;
-    font-weight: 800;
-    font-style: normal;
-    color: #232323;
-    padding: 10px 20px 15px 20px;
-    height: 50px;
-    margin-bottom: 15px;
-}
-.adresa{ grid-area: 1 / 2 / 2 / 3;}
 
-.add-div{
-    background-color: #E5DED2;
-    border-radius: 15px;
-    font-size: 28px;
-    font-family: "Cormorant Garamond", serif;
-    font-optical-sizing: auto;
-    font-weight: 800;
-    font-style: normal;
-    color: #232323;
-    padding: 20px 0px 20px 20px;
-}
-
-.contact-item {
+.addressDiv{
+    padding: 40px 60px;
     display: flex;
-    align-items: flex-start; 
-    gap: 20px; 
-    margin-bottom: 20px; 
+    flex-direction: column;
+    justify-content: center;
+}
+.addH1{
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+}
+.contactInfo {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
 }
 
-.contact-item img {
-    flex-shrink: 0; 
+.contactItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 35px; 
 }
 
-.contact-item p {
-    margin: 0; 
-    line-height: 1.5;
+.icon {
+    width: 50px;
+    height: 50px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    flex-shrink: 0;
 }
+
+.icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: #666;
+    fill: none;
+    stroke-width: 2;
+}
+
+.contactDetails {
+    flex: 1;
+}
+
+.contactDetails p {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 3px 0;
+}
+
+.contactDetails a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contactDetails a:hover {
+    color: #2196F3;
+}
+
+
 
 .clickable {
     cursor: pointer;
@@ -284,20 +362,146 @@ nav a:hover {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Tablet  */
+@media (max-width: 968px) {
+    nav {
+        padding: 20px 30px;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .NavMenu {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        flex-direction: column;
+        background-color: #f0ebe5;
+        width: 100%;
+        height: 100vh;
+        text-align: center;
+        transition: left 0.3s ease;
+        padding-top: 100px;
+        gap: 40px;
+        z-index: 999;
+        transform: none;
+    }
+
+    .NavMenu.active {
+        left: 0;
+    }
+
+    .socialIcons {
+        gap: 20px;
+    }
 
 
-/* responzivny dizajn galerie */
-@media (max-width: 768px) {
-    .galleryProjects {
+    .headerbck {
+        height: 80vh;
+    }
+
+    #h1header {
+        font-size: 50px;
+        margin: 50vh 0 0 20px;
+    }
+
+    .slogan {
+        font-size: 15px;
+    }
+
+    .galleryProjekty {
         padding: 0 40px;
     }
 
     .galleryItem {
-        flex: 0 0 220px;
+        flex: 0 0 240px;
+    }
+
+    .galleryImg {
+        height: 200px;
+    }
+
+    .mapkaGrid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 15px;
+    }
+
+    .mapka {
+        order: 2;
+    }
+
+    .addressDiv {
+        order: 1;
+        padding: 30px 40px;
+    }
+
+    .addH1 {
+        font-size: 32px;
+    }
+
+    .pata {
+        margin: 25px 10px 10px 10px;
+        padding: 12px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    nav {
+        padding: 15px 20px;
+        margin: 5px;
+    }
+
+    .logoBoxik {
+        width: 60px;
+        height: 60px;
+    }
+
+    .NavMenu {
+        padding-top: 80px;
+        gap: 30px;
+    }
+
+    .NavMenu li a {
+        font-size: 16px;
+    }
+
+    .socialIcons a img {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .headerbck {
+        height: 70vh;
+        margin: 3px;
+    }
+
+    #h1header {
+        font-size: 36px;
+        margin: 40vh 0 0 15px;
+    }
+
+    .slogan {
+        font-size: 13px;
+        margin-left: 18px;
+    }
+
+    .galleryProjekty {
+        padding: 0 20px;
+    }
+
+    .galleryItem {
+        flex: 0 0 200px;
     }
 
     .galleryImg {
         height: 180px;
+    }
+
+    .galleryCaption {
+        font-size: 11px;
     }
 
     .navButton {
@@ -305,258 +509,84 @@ nav a:hover {
         height: 40px;
     }
 
-    .navButton svg {
-        width: 16px;
-        height: 16px;
+    .navButton.prev {
+        left: 5px;
     }
-}
 
-/* responzivita */
-@media screen and (max-width: 768px) {
-    .mapka-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        margin: 20px 15px;
+    .navButton.next {
+        right: 5px;
     }
-    
-    .mapka {
-        grid-area: 1 / 1 / 2 / 2;
-        margin-bottom: 15px;
-    }
-    
-    .adresa {
-        grid-area: 2 / 1 / 3 / 2;
-    }
-    
-    .kont-popis {
-        grid-area: auto;
-        height: auto;
-        font-size: 24px;
-        padding: 15px;
-    }
-    
-    .add-div {
-        font-size: 20px;
-        padding: 15px;
-    }
-    
-    .contact-item {
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-    
-    .contact-item img {
-        width: 35px;
-        height: 35px;
-    }
-}
 
-/* mobilcok */
-@media screen and (max-width: 480px) {
-    .navbar {
-        flex-direction: column;
-        padding: 15px;
+    .mapkaGrid {
+        padding: 10px;
         margin: 10px;
-        gap: 15px;
     }
-    
-    .nav-links {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    nav a {
-        font-size: 16px;
-    }
-    
-    .mapka-grid {
-        margin: 15px 10px;
-    }
-    
-    .kont-popis {
-        font-size: 20px;
-        padding: 12px;
-    }
-    
-    .add-div {
-        font-size: 16px;
-        padding: 12px;
-    }
-    
-    .contact-item {
-        gap: 12px;
-        margin-bottom: 12px;
-    }
-    
-    .contact-item img {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .contact-item p {
-        font-size: 14px;
-    }
-    
-    .pata {
-        margin: 20px 10px 10px 10px;
-        font-size: 14px;
-    }
-}
 
+    .addressDiv {
+        padding: 20px 20px;
+    }
 
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 5px;
-}
-
-.hamburger span {
-    width: 25px;
-    height: 3px;
-    background-color: #37353E;
-    transition: all 0.3s ease;
-}
-
-
-@media screen and (max-width: 1024px) {
-    .navbar {
-        padding: 10px 20px;
-    }
-    
-    .nav-links {
-        gap: 25px;
-    }
-    
-    nav a {
-        font-size: 16px;
-    }
-    
-    #h1header {
-        font-size: 50px;
-        margin: 300px 0 0 20px;
-    }
-    
-    .slogan {
-        font-size: 15px;
-    }
-    
-    .projekty {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        gap: 15px;
-        margin: 25px 15px;
-    }
-    
-    .c1, .c2, .c3, .c4, .c5, .c6 {
-        grid-area: auto !important;
-    }
-    
-    .c2, .c4, .c6 {
-        padding: 30px 20px;
+    .addH1 {
         font-size: 28px;
-        text-align: center;
+        margin-bottom: 20px;
     }
-}
 
+    .contactInfo {
+        padding: 25px 20px;
+    }
 
-@media screen and (max-width: 768px) {
-    .hamburger {
-        display: flex;
+    .contactItem {
+        margin-bottom: 25px;
     }
-    
-    .navbar {
-        flex-wrap: wrap;
-        padding: 15px 20px;
-        position: relative;
-    }
-    
-    .logoArea {
-        order: 1;
-    }
-    
-    .hamburger {
-        order: 2;
-    }
-    
-    .mediaLinks {
-        order: 3;
-    }
-    
-    .navLinks {
-        order: 4;
-        width: 100%;
-        flex-direction: column;
-        gap: 15px;
-        margin-top: 15px;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-    
-    .navLinks.active {
-        max-height: 300px;
-    }
-    
-    .headerbck {
-        height: 500px;
-    }
-    
-    #h1header {
-        font-size: 40px;
-        margin: 250px 0 0 15px;
-    }
-    
-    .slogan {
-        font-size: 14px;
-        margin-left: 20px;
-    }
-        
-    .pata {
-        margin: 25px 10px 10px 10px;
-    }
-}
 
+    .icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 15px;
+    }
 
-@media screen and (max-width: 480px) {
-    .navbar {
-        margin: 10px;
-        padding: 12px 15px;
-    }
-    
-    nav a {
-        font-size: 16px;
-        padding: 8px 0;
-    }
-    
-    .mediaLinks {
-        gap: 8px;
-    }
-    
-    .mediaLinks img {
+    .icon svg {
         width: 20px;
         height: 20px;
     }
-    
-    .headerbck {
-        height: 400px;
-        margin: 5px;
-    }
-    
-    #h1header {
-        font-size: 32px;
-        margin: 200px 0 0 15px;
-    }
-    
-    .slogan {
-        font-size: 12px;
-        margin-left: 15px;
+
+    .contactDetails p {
+        font-size: 14px;
     }
 
     .pata {
         margin: 20px 8px 8px 8px;
-        padding: 12px;
+        padding: 10px;
         font-size: 14px;
+    }
+
+    .pata p:last-child {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    #h1header {
+        font-size: 30px;
+    }
+
+    .slogan {
+        font-size: 12px;
+    }
+
+    .galleryItem {
+        flex: 0 0 180px;
+    }
+
+    .galleryImg {
+        height: 160px;
+    }
+
+    .addH1 {
+        font-size: 24px;
+    }
+
+    .contactDetails p {
+        font-size: 13px;
     }
 }
