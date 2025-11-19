@@ -39,13 +39,13 @@ nav a:hover {
   color: rgb(146, 109, 71);
 }
 
-.nav-links {
+.navLinks {
     display: flex;
     gap: 45px;
     align-items: center;
 }
 
-.media-links{
+.mediaLinks{
     display: flex;
     gap: 10px;
     align-items: center;
@@ -55,16 +55,17 @@ nav a:hover {
     background-image: linear-gradient(rgba(255, 255, 255, 0.142), rgba(0, 0, 0, 0.865)), url('./assets/header1.jpg');
     background-size: cover;
     border-radius: 10px;
-    height: 650px;
+    height: 100vh;
     margin: 5px;
     padding: 1px;
+    object-fit: scale-down;
 }
 
 #h1header{
     font-weight: 400;
     font-size: 70px;
     color: #fbf7f4;
-    margin: 400px 0 0 20px;
+    margin: 65vh 0 0 20px;
     padding: 0;
 }
 .slogan{
@@ -74,100 +75,135 @@ nav a:hover {
     margin-left: 25px;
 }
 
- .o-projekte{
-    background-color: #FCF5EE;
-    width: auto;
-    margin: 25px 15px;
-    height: auto;
-    border-radius: 10px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 5px;
-    padding: 15px;
-} 
+/* Galéria projektov */
 
- .projekt-p{
-    width: auto;
-     grid-area: 1 / 1 / 2 / 4;
-} 
-.projekt-p > p{
-    padding: 20px 0px;
+.galleryProjekty {
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 60px;
 }
 
- .projekt-d{
-    width: 100%;
-    grid-area: 1 / 4 / 4 / 6;
-    border-radius: 15px;
-} 
-
-.div2 { 
-    grid-area: 2 / 1 / 3 / 2;
-    border-radius: 5px;
-    width: 100%;
+.galleryProjects {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
 }
-.div3 { 
-    width: 100%;
-    grid-area: 2 / 2 / 3 / 3;
-    margin: 1px;
-    border-radius: 5px;
-}
-.div4 { 
-    width: 100%;
-    grid-area: 2 / 3 / 3 / 4;
-    border-radius: 5px;
-}
-.div5 { 
-    width: 100%;
-    grid-area: 3 / 1 / 4 / 2;
-    border-radius: 5px;
-}
-.div6 { 
-    width: 100%;
-    grid-area: 3 / 2 / 4 / 3;
-    border-radius: 5px;
-}
-.div7 { 
-    width: 100%;
-    grid-area: 3 / 3 / 4 / 4;
-    border-radius: 5px;
-} 
-
-
-.projekty {
-    /* background-color: #FCF5EE; */
-    width: auto;
-    margin: 35px 15px;
-    height: auto;
-    border-radius: 10px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    padding: 5px;
+.galleryList {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.5s ease;
+    padding: 20px 0;
 }
 
-.c1 { grid-area: 1 / 1 / 3 / 2; width: 100%; border-radius: 15px;}
-.c2 { grid-area: 3 / 1 / 4 / 2;}
-.c3 { grid-area: 2 / 2 / 4 / 3; width: 100%; border-radius: 15px;}
-.c4 { grid-area: 1 / 2 / 2 / 3;}
-.c5 { grid-area: 1 / 3 / 3 / 4; width: 100%; border-radius: 15px;}
-.c6 { grid-area: 3 / 3 / 4 / 4;}
-/* moka #685d54 */
-.c2,  .c4,  .c6{
-    border-radius: 15px;
-    background-color: #E5DED2;
-    font-size: 30px;
-    font-family: "Cormorant Garamond", serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    color: #232323;
-    padding: 20px 20px 20px 20px;
+.galleryItem {
+    flex: 0 0 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
+.galleryImg {
+    width: 100%;
+    height: 240px;
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+    position: relative;
+    overflow: hidden;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.galleryImg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+.galleryCaption {
+    padding: 0;
+    text-align: left;
+    font-size: 12px;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent;
+}
+
+/* Navigačné tlačidlá */
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navButton:hover {
+    background: #f5f5f5;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.navButton:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.navButton.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.navButton.prev {
+    left: 10px;
+}
+.navButton.next {
+    right: 10px;
+}
+.nav-button svg {
+    width: 20px;
+    height: 20px;
+    fill: #333;
+}
+
+/* oblast */
+.gallery-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    background: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background: #333;
+    width: 24px;
+    border-radius: 4px;
+}
+
+.indicator:hover {
+    background: #000;
+}
+
+/* pata stranky */
 .pata{
     background-color: #E5DED2;
     margin: 35px 20px 10px 15px;
@@ -176,6 +212,7 @@ nav a:hover {
     text-align: center;
 }
 
+/* cast kontakty */
 .mapka-grid{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -248,7 +285,33 @@ nav a:hover {
 }
 
 
-/* resp */
+
+/* responzivny dizajn galerie */
+@media (max-width: 768px) {
+    .galleryProjects {
+        padding: 0 40px;
+    }
+
+    .galleryItem {
+        flex: 0 0 220px;
+    }
+
+    .galleryImg {
+        height: 180px;
+    }
+
+    .navButton {
+        width: 40px;
+        height: 40px;
+    }
+
+    .navButton svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* responzivita */
 @media screen and (max-width: 768px) {
     .mapka-grid {
         grid-template-columns: 1fr;
@@ -409,7 +472,7 @@ nav a:hover {
         position: relative;
     }
     
-    .logo-area {
+    .logoArea {
         order: 1;
     }
     
@@ -417,11 +480,11 @@ nav a:hover {
         order: 2;
     }
     
-    .media-links {
+    .mediaLinks {
         order: 3;
     }
     
-    .nav-links {
+    .navLinks {
         order: 4;
         width: 100%;
         flex-direction: column;
@@ -432,7 +495,7 @@ nav a:hover {
         transition: max-height 0.3s ease;
     }
     
-    .nav-links.active {
+    .navLinks.active {
         max-height: 300px;
     }
     
@@ -449,17 +512,7 @@ nav a:hover {
         font-size: 14px;
         margin-left: 20px;
     }
-    
-    .projekty {
-        margin: 20px 10px;
-        gap: 12px;
-    }
-    
-    .c2, .c4, .c6 {
-        padding: 25px 15px;
-        font-size: 24px;
-    }
-    
+        
     .pata {
         margin: 25px 10px 10px 10px;
     }
@@ -477,11 +530,11 @@ nav a:hover {
         padding: 8px 0;
     }
     
-    .media-links {
+    .mediaLinks {
         gap: 8px;
     }
     
-    .media-links img {
+    .mediaLinks img {
         width: 20px;
         height: 20px;
     }
@@ -500,18 +553,7 @@ nav a:hover {
         font-size: 12px;
         margin-left: 15px;
     }
-    
-    .projekty {
-        margin: 15px 8px;
-        gap: 10px;
-        padding: 3px;
-    }
-    
-    .c2, .c4, .c6 {
-        padding: 20px 15px;
-        font-size: 20px;
-    }
-    
+
     .pata {
         margin: 20px 8px 8px 8px;
         padding: 12px;
