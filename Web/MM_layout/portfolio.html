@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MM Architects</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="headerbck">
+        <nav>
+            <div class="logoBoxik">
+                <img src="./assets/logoincircle.jpg" alt="Logo" id="logoImg">
+            </div>
+
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <ul class="NavMenu" id="navMenu">
+                <li><a href="./index.html">Domov</a></li>
+                <li><a href="#portfolio">Portfólio</a></li>
+                <!-- <li><a href="#kontakt">Kontakt</a></li> -->
+            </ul>
+
+            <div class="socialIcons">
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+                    <img src="./assets/fb.png" alt="" width="28px" height="28px">
+                </a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                    <img src="./assets/insta.png" alt="" width="28px" height="28px">
+                </a>
+            </div>
+        </nav>
+
+
+        <h1 id="h1header">MM Architects</h1>
+        <p class="slogan">Kvalita v každom detaile, elegancia v každom priestore</p>
+    </header>
+    
+    <main id="portfolio">
+        <!-- Projekt 1 -->
+        <section id="first">
+            <div class="contModelOne">
+                <div class="imageSection" onclick="openGallery('projekt1', 0)">
+                    <img src="./assets/oznica/ozn1.jpg" alt="Dolný Kubín">
+                    <div class="inLineNum">01</div>
+                </div>
+
+                <div class="contSection">
+                    <div class="projYear">2020</div>
+                    <h1 class="projName">Dolný Kubín,<br>Ožnica III.</h1>
+                    <div class="description">
+                        Architektonická štúdia rodinných domov s tromi bytovými jednotkami.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 2 -->
+        <section id="second">
+            <div class="contModelOne">
+                <div class="contSection2">
+                    <div class="projYear">2020</div>
+                    <h1 class="projName">Moderný <br>bungalov</h1>
+                    <div class="description">
+                        V spolupráci s IDEÁLNE DOMY Vám predstavujeme náš nový návrh moderného bungalovu, ktorý svojou zaujímavou architektúrou podporenou výraznou kombináciou betónovej stierky a dreveného obkladu vynikne v mestskej zástavbe.
+                    </div>
+                    <div class="description">
+                        <!-- Kombinácia prírodných materiálov a moderných prvkov vytvára jedinečnú atmosféru. -->
+                    </div>
+                </div>
+
+                <div class="imageSection2" onclick="openGallery('projekt2', 0)">
+                    <img src="./assets/bungalov/bun1.jpg" alt="Modern Loft">
+                    <div class="inLineNum2">02</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 3 -->
+        <section id="third">
+            <div class="contModelOne">
+                <div class="imageSection" onclick="openGallery('projekt3', 0)">
+                    <img src="./assets/pool/pool.jpg" alt="Makov">
+                    <div class="inLineNum">03</div>
+                </div>
+
+                <div class="contSection">
+                    <div class="projYear">2022</div>
+                    <h1 class="projName">Apartmánový dom<br>v Makove</h1>
+                    <div class="description">
+                        Pri rekonštrukcii saunového sveta sme navrhli wellness zónu v kombinácii príjemných teplých materiálov a nadčasových čierno-betónových prvkov. 
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 4 -->
+        <section id="fourth">
+            <div class="contModelOne">
+                <div class="contSection2">
+                    <div class="projYear">2024</div>
+                    <h1 class="projName">Radové <br>rodinné domy </h1>
+                    <div class="description">
+                        Urbanistický návrh individuálnej bytovej výstavby v Martine. 
+                    </div>
+                </div>
+
+                <div class="imageSection2" onclick="openGallery('projekt4', 0)">
+                    <img src="./assets/urban/urban1.jpg" alt="Urban Studio">
+                    <div class="inLineNum2">04</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 5 -->
+        <section id="fiveth">
+            <div class="contModelOne">
+                <div class="imageSection" onclick="openGallery('projekt5', 0)">
+                    <img src="./assets/tatry/tatry1.jpg" alt="Mountain House">
+                    <div class="inLineNum">05</div>
+                </div>
+
+                <div class="contSection">
+                    <div class="projYear">2023</div>
+                    <h1 class="projName">Interiérový návrh <br>obývacej izby</h1>
+                    <div class="description">
+                        Návrh interiéru zohľadňuje elegantný mix prvkov, ktoré spájaja luxusné tmavé drevo, hlbokú čiernu a surový betón. Hlavným cieľom bolo vytvoriť priestor, ktorý je nielen vizuálne pôsobivý, ale aj funkčný a pohodlný.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 6 -->
+        <section id="sixth">
+            <div class="contModelOne">
+                <div class="contSection2">
+                    <div class="projYear">2024</div>
+                    <h1 class="projName">Apartmánový dom<br>Hillside </h1>
+                    <div class="description">
+                        Interiérový návrh vyniká kombináciou prírodných materiálov a chladného betónu, čo vytvára jedinečnú atmosféru spojenia s prírodou a moderného štýlu. Pri navrhovaní interiéru sme sa inšpirovali okolitou krajinou, čím sme chceli vytvoriť harmonický priestor.
+                    </div>
+                </div>
+
+                <div class="imageSection2" onclick="openGallery('projekt6', 0)">
+                    <img src="./assets/hills/hills1.jpg" alt="Coastal Retreat">
+                    <div class="inLineNum2">06</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 7 -->
+        <section id="seventh">
+            <div class="contModelOne">
+                <div class="imageSection" onclick="openGallery('projekt7', 0)">
+                    <img src="./assets/ambul/ambul1.jpg" alt="Garden House">
+                    <div class="inLineNum">07</div>
+                </div>
+
+                <div class="contSection">
+                    <div class="projYear">2024</div>
+                    <h1 class="projName">Interiér<br>ambulancií</h1>
+                    <div class="description">
+                        Priestory svojim materiálovým a farebným riešením ponúkajú príjemné prostredie pre prácu lekárov a zároveň vytvárajú dobrú atmosféru pre pacientov.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekt 8 -->
+        <section id="eighth">
+            <div class="contModelOne">
+                <div class="contSection2">
+                    <div class="projYear">2024</div>
+                    <h1 class="projName">Zasadacia miestnosť <br>nemocnice</h1>
+                    <div class="description">
+                        Tento interiérový návrh prináša nový štandard pre pracovné prostredie lekárov, zdravotného personálu a vedenia.
+                    </div>
+                </div>
+
+                <div class="imageSection2" onclick="openGallery('projekt8', 0)">
+                    <img src="./assets/zasad/zasad1.jpg" alt="City Penthouse">
+                    <div class="inLineNum2">08</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JEDNA galéria pre všetky projekty -->
+    <div class="projGallery" id="projGalleryModal">
+        <span class="close-btn" onclick="closeGallery()">&times;</span>
+        <button class="nav-btn prev-btn" onclick="changeImage(-1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeImage(1)">&#10095;</button>
+        
+        <div class="galleryContent">
+            <img class="galleryImage" id="galleryImage" src="" alt="Gallery Image">
+        </div>
+    </div>
+    
+
+   
+
+    <footer class="pata">
+        <p>MM | ARCHITECTS </p>
+        <p style="font-size: smaller;">&#174; Natalia Petrilova</p>
+    </footer>
+
+    <script>
+        const projectGalleries = {
+            'projekt1': [
+                './assets/oznica/ozn1.jpg',
+                './assets/oznica/ozn2.jpg',
+                './assets/oznica/ozn3.jpg'
+            ],
+            'projekt2': [
+                './assets/bungalov/bun1.jpg',
+                './assets/bungalov/bun2.jpg',
+                './assets/bungalov/bun3.jpg'
+            ],
+            'projekt3': [
+                './assets/pool/pool1.jpg',
+                './assets/pool/recepcia.jpg',
+                './assets/pool/sauny.jpg',
+                './assets/pool/chill.jpg',
+                './assets/pool/lobby.jpg',
+                './assets/pool/pool.jpg'
+            ],
+            'projekt4': [
+                './assets/urban/urban1.jpg',
+                './assets/urban/urban2.jpg',
+                './assets/urban/urban3.jpg'
+            ],
+            'projekt5': [
+                './assets/tatry/tatry1.jpg',
+                './assets/tatry/tatry2.jpg',
+                './assets/tatry/tatry3.jpg'
+            ],
+            'projekt6': [
+                './assets/hills/hills1.jpg',
+                './assets/hills/hills2.jpg',
+                './assets/hills/hills3.jpg'
+            ],
+            'projekt7': [
+                './assets/ambul/ambul1.jpg',
+                './assets/ambul/ambul2.jpg',
+                './assets/ambul/ambul3.jpg',
+                './assets/ambul/ambul4.jpg',
+                './assets/ambul/ambul5.jpg'
+            ],
+            'projekt8': [
+                './assets/zasad/zasad1.jpg',
+                './assets/zasad/zasad2.jpg',
+                './assets/zasad/zasad3.jpg',
+                './assets/zasad/zasad4.jpg'
+            ]
+        };
+
+        let currentProject = '';
+        let currentImageIndex = 0;
+
+        function openGallery(projectId, startIndex = 0) {
+            currentProject = projectId;
+            currentImageIndex = startIndex;
+            const images = projectGalleries[projectId];
+            
+            if (!images) {
+                console.error('Galéria pre projekt ' + projectId + ' neexistuje');
+                return;
+            }
+
+            document.getElementById('projGalleryModal').classList.add('active');
+            updateGalleryImage();
+            createThumbnails();
+        }
+
+        function closeGallery() {
+            document.getElementById('projGalleryModal').classList.remove('active');
+        }
+
+        function changeImage(direction) {
+            const images = projectGalleries[currentProject];
+            currentImageIndex += direction;
+            
+            if (currentImageIndex < 0) {
+                currentImageIndex = images.length - 1;
+            } else if (currentImageIndex >= images.length) {
+                currentImageIndex = 0;
+            }
+            updateGalleryImage();
+        }
+
+        function updateGalleryImage() {
+            const images = projectGalleries[currentProject];
+            document.getElementById('galleryImage').src = images[currentImageIndex];
+        }
+    </script>
+</body>
+</html>

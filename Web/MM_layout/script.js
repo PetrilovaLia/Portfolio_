@@ -93,3 +93,80 @@ document.querySelectorAll('.NavMenu a').forEach(link => {
         document.querySelector('.hamburger').classList.remove('active');
     });
 });
+
+// PORTFOLIO csat
+const images = [
+    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200',
+    'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=1200',
+    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200',
+    'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1200',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200'
+];
+
+let currentImageIndex = 0;
+
+function openGallery(index) {
+    currentImageIndex = index;
+    document.getElementById('projGalleryModal').classList.add('active');
+    updateGalleryImage();
+    createThumbnails();
+}
+
+function closeGallery() {
+    document.getElementById('projGalleryModal').classList.remove('active');
+}
+
+function changeImage(direction) {
+    currentImageIndex += direction;
+    if (currentImageIndex < 0) {
+        currentImageIndex = images.length - 1;
+    } else if (currentImageIndex >= images.length) {
+        currentImageIndex = 0;
+    }
+    updateGalleryImage();
+}
+
+function updateGalleryImage() {
+    document.getElementById('galleryImage').src = images[currentImageIndex];
+    document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${images.length}`;
+    updateThumbnails();
+}
+
+function createThumbnails() {
+    const strip = document.getElementById('thumbnailStrip');
+    strip.innerHTML = '';
+    images.forEach((img, index) => {
+        const thumb = document.createElement('img');
+        thumb.src = img;
+        thumb.className = 'thumbnail';
+        if (index === currentImageIndex) {
+            thumb.classList.add('active');
+        }
+        thumb.onclick = () => {
+            currentImageIndex = index;
+            updateGalleryImage();
+        };
+        strip.appendChild(thumb);
+    });
+}
+
+function updateThumbnails() {
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    thumbnails.forEach((thumb, index) => {
+        if (index === currentImageIndex) {
+               thumb.classList.add('active');
+           } else {
+            thumb.classList.remove('active');
+        }
+    });
+}
+
+// Klávesové skratky
+document.addEventListener('keydown', (e) => {
+        if (document.getElementById('projGalleryModal').classList.contains('active')) {
+        if (e.key === 'ArrowLeft') changeImage(-1);
+        if (e.key === 'ArrowRight') changeImage(1);
+        if (e.key === 'Escape') closeGallery();
+    }
+});
