@@ -19,6 +19,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   emoji: { fontSize: 48, marginBottom: 12 },
-  title: { fontSize: 22, fontWeight: "700", color: COLORS.teal },
+  title: { fontSize: 22, fontWeight: "700" },
   sub: { fontSize: 14, color: COLORS.textLight, marginTop: 6 },
 });
