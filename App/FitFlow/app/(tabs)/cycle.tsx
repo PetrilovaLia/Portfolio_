@@ -217,18 +217,6 @@ function buildMarkedDates(
   return marked;
 }
 
-function getWeekDays(today: string) {
-  const labels = ["S", "M", "T", "W", "T", "F", "S"];
-  const days = [];
-  for (let i = -3; i <= 3; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + i);
-    const dateStr = d.toISOString().split("T")[0];
-    days.push({ dateStr, day: d.getDate(), label: labels[d.getDay()] });
-  }
-  return days;
-}
-
 function formatHeaderDate(today: string) {
   const d = new Date(today);
   const days = [
@@ -270,7 +258,9 @@ export default function CycleScreen() {
     BonaNova_700Bold,
   });
 
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(
+    new Date().toISOString().split("T")[0],
+  );
   const [dayData, setDayData] = useState<Record<string, DayData>>({});
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [tempData, setTempData] = useState<DayData>({
@@ -282,10 +272,9 @@ export default function CycleScreen() {
     useState<ReturnType<typeof computePredictions>>(null);
   const [startDates, setStartDates] = useState<string[]>([]);
   const [periodSelectDays, setPeriodSelectDays] = useState<string[]>([]);
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(true);
 
   const today = new Date().toISOString().split("T")[0];
-  const weekDays = getWeekDays(today);
 
   useEffect(() => {
     const loaded = loadAllCycleDays();
@@ -293,6 +282,7 @@ export default function CycleScreen() {
     const starts = loadCycleStartDates();
     setStartDates(starts);
     setPredictions(computePredictions(starts));
+    setSelectedDay(new Date().toISOString().split("T")[0]);
   }, []);
 
   const refreshPredictions = () => {
@@ -305,18 +295,37 @@ export default function CycleScreen() {
     ? getCurrentPhase(startDates, predictions.avgCycleLength)
     : null;
 
-  const dotAngle = phase
-    ? ((phase.dayOfCycle - 1) / (predictions?.avgCycleLength ?? 28)) * 360 - 90
-    : -90;
-  const dotRad = (dotAngle * Math.PI) / 180;
   const circleR = CIRCLE_SIZE / 2;
-  const dotSize = 22;
-  const borderWidth = 3;
-  const radius = circleR - borderWidth / 2;
-  const dotX = circleR + radius * Math.cos(dotRad) - dotSize / 2;
-  const dotY = circleR + radius * Math.sin(dotRad) - dotSize / 2;
 
   const savePeriodDays = () => {
+    const newDayData = { ...dayData };
+
+    // Vymaž všetky existujúce dni periódy ktoré nie sú v periodSelectDays
+    const removedDays = Object.keys(dayData).filter(
+      (d) => dayData[d].intensity && !periodSelectDays.includes(d),
+    );
+    for (const date of removedDays) {
+      const existing = dayData[date];
+      const hasOtherData =
+        existing.symptoms.length > 0 ||
+        existing.moods.length > 0 ||
+        existing.intimacy.length > 0;
+      if (hasOtherData) {
+        saveCycleDay(
+          date,
+          undefined,
+          existing.symptoms,
+          existing.moods,
+          existing.intimacy,
+        );
+        newDayData[date] = { ...existing, intensity: undefined };
+      } else {
+        deleteCycleDay(date);
+        delete newDayData[date];
+      }
+    }
+
+    // Ulož nové dni
     for (const date of periodSelectDays) {
       const existing = dayData[date] ?? {
         symptoms: [],
@@ -330,11 +339,10 @@ export default function CycleScreen() {
         existing.moods,
         existing.intimacy,
       );
-      setDayData((prev) => ({
-        ...prev,
-        [date]: { ...existing, intensity: "medium" },
-      }));
+      newDayData[date] = { ...existing, intensity: "medium" };
     }
+
+    setDayData(newDayData);
     setPeriodSelectDays([]);
     refreshPredictions();
     setModalMode(null);
@@ -428,6 +436,7 @@ export default function CycleScreen() {
   };
 
   const selectedData = selectedDay ? dayData[selectedDay] : null;
+  // const showingCalendarToday = showCalendar && selectedDay === today;
 
   if (!fontsLoaded) return null;
 
@@ -443,24 +452,23 @@ export default function CycleScreen() {
           <View style={styles.logoBox}>
             <Text style={styles.logoText}>lia</Text>
           </View>
+          <Text style={styles.headerDate}>{formatHeaderDate(today)}</Text>
         </View>
 
         {/* KRUH */}
         <View style={styles.circleContainer}>
           <Svg width={CIRCLE_SIZE} height={CIRCLE_SIZE}>
-            {/* Pozadie kruhu */}
             <SvgCircle
               cx={CIRCLE_SIZE / 2}
               cy={CIRCLE_SIZE / 2}
-              r={CIRCLE_SIZE / 2 - 12}
+              r={circleR - 12}
               stroke={COLORS.bgElevated}
               strokeWidth={3}
               fill="none"
             />
-            {/* Progress oblúk */}
             {phase &&
               (() => {
-                const r = CIRCLE_SIZE / 2 - 12;
+                const r = circleR - 12;
                 const circumference = 2 * Math.PI * r;
                 const progress =
                   (phase.dayOfCycle - 1) / (predictions?.avgCycleLength ?? 28);
@@ -483,16 +491,13 @@ export default function CycleScreen() {
               })()}
           </Svg>
 
-          {/* Text v strede */}
           <View style={styles.circleInner}>
             {phase ? (
               <>
                 <Text style={styles.circlePhaseNum}>
                   Day {String(phase.dayOfCycle).padStart(2, "0")}
                 </Text>
-                {/* <Text style={styles.circlePhaseNum}>PHASE {phase.phase}</Text> */}
                 <Text style={styles.circlePhaseName}>{phase.name}</Text>
-
                 {predictions?.daysUntilOvulation != null &&
                 predictions.daysUntilOvulation > 0 ? (
                   <View style={styles.circleOvBadge}>
@@ -517,7 +522,7 @@ export default function CycleScreen() {
           </View>
         </View>
 
-        {/* TIP */}
+        {/* TIPS */}
         {phase && (
           <View style={styles.tipsRow}>
             <View style={styles.tipCard}>
@@ -531,10 +536,13 @@ export default function CycleScreen() {
           </View>
         )}
 
-        {/* KALENDÁR TOGGLE */}
-        <TouchableOpacity
+        {/* KALENDÁR TOGGLE - skryty kalendar */}
+        {/* <TouchableOpacity
           style={styles.calendarToggle}
-          onPress={() => setShowCalendar((prev) => !prev)}
+          onPress={() => {
+            setShowCalendar((prev) => !prev);
+            setSelectedDay(null);
+          }}
         >
           <Text style={styles.calendarToggleText}>
             {showCalendar ? "Hide calendar" : "Show calendar"}
@@ -544,8 +552,9 @@ export default function CycleScreen() {
             size={16}
             color={COLORS.textMuted}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
+        {/* KALENDÁR */}
         {showCalendar && (
           <View style={styles.calCard}>
             <Calendar
@@ -567,6 +576,7 @@ export default function CycleScreen() {
               dayComponent={({ date, state, marking }: any) => {
                 const isSelected = marking?.selected;
                 const isToday = date?.dateString === today;
+                const isActiveDaySelected = date?.dateString === selectedDay;
                 const dots = marking?.dots ?? [];
                 return (
                   <TouchableOpacity
@@ -589,10 +599,11 @@ export default function CycleScreen() {
                           marking?.selectedColor ?? COLORS.period,
                       },
                       isToday &&
-                        !isSelected && {
-                          borderWidth: 1,
-                          borderColor: COLORS.text,
-                        },
+                        !isSelected && { backgroundColor: COLORS.bgElevated },
+                      isActiveDaySelected && {
+                        borderWidth: 1.5,
+                        borderColor: COLORS.text,
+                      },
                     ]}
                   >
                     <Text
@@ -634,177 +645,15 @@ export default function CycleScreen() {
                 textMonthFontFamily: "BonaNova_700Bold",
               }}
             />
-            {selectedDay && selectedDay <= today && (
-              <View style={styles.dayPreviewGrid}>
-                {!selectedData ? (
-                  <TouchableOpacity
-                    style={styles.logItem}
-                    onPress={() => {
-                      setTempData({ symptoms: [], moods: [], intimacy: [] });
-                      setModalMode("symptom");
-                    }}
-                  >
-                    <Ionicons name="add" size={26} color={COLORS.textMuted} />
-                    <Text style={styles.logItemLabelMuted}>ADD</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <>
-                    {selectedData.intensity && (
-                      <View style={styles.logItem}>
-                        <Ionicons
-                          name="water-outline"
-                          size={26}
-                          color={COLORS.text}
-                        />
-                        <Text style={styles.logItemLabel}>
-                          {
-                            FLOW.find((f) => f.key === selectedData.intensity)
-                              ?.label
-                          }
-                        </Text>
-                      </View>
-                    )}
-                    {selectedData.moods.map((m) => (
-                      <View key={m} style={styles.logItem}>
-                        <Ionicons
-                          name={EMOTIONS.find((x) => x.key === m)?.icon as any}
-                          size={26}
-                          color={COLORS.text}
-                        />
-                        <Text style={styles.logItemLabel}>
-                          {EMOTIONS.find((x) => x.key === m)?.label}
-                        </Text>
-                      </View>
-                    ))}
-                    {selectedData.intimacy.map((i) => (
-                      <View key={i} style={styles.logItem}>
-                        <Ionicons
-                          name={INTIMACY.find((x) => x.key === i)?.icon as any}
-                          size={26}
-                          color={COLORS.text}
-                        />
-                        <Text style={styles.logItemLabel}>
-                          {INTIMACY.find((x) => x.key === i)?.label}
-                        </Text>
-                      </View>
-                    ))}
-                    {selectedData.symptoms.map((s) => (
-                      <View key={s} style={styles.logItem}>
-                        <Ionicons
-                          name="medical-outline"
-                          size={26}
-                          color={COLORS.text}
-                        />
-                        <Text style={styles.logItemLabel}>
-                          {SYMPTOMS.find(
-                            (x) => x.key === s,
-                          )?.label.toUpperCase()}
-                        </Text>
-                      </View>
-                    ))}
-                    <TouchableOpacity
-                      style={styles.logItem}
-                      onPress={() => {
-                        setTempData(
-                          dayData[selectedDay] ?? {
-                            symptoms: [],
-                            moods: [],
-                            intimacy: [],
-                          },
-                        );
-                        setModalMode("symptom");
-                      }}
-                    >
-                      <Ionicons name="add" size={26} color={COLORS.textMuted} />
-                      <Text style={styles.logItemLabelMuted}>EDIT</Text>
-                    </TouchableOpacity>
-                  </>
-                )}
-              </View>
-            )}
           </View>
         )}
 
-        {/* DAILY LOGS HEADER */}
-        <View style={styles.logsHeader}>
-          <Text style={styles.logsTitle}>Daily Logs</Text>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedDay(today);
-              setTempData(
-                dayData[today] ?? { symptoms: [], moods: [], intimacy: [] },
-              );
-              setModalMode("symptom");
-            }}
-          >
-            <Text style={styles.logsEdit}>EDIT ENTRIES</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* DAILY LOGS GRID */}
-        {(() => {
-          const todayData = dayData[today];
-          if (!todayData)
-            return (
+        {/* DAILY LOGS – skryté keď je kalendár otvorený a vybraný dnešok */}
+        {
+          <>
+            <View style={styles.logsHeader}>
+              <Text style={styles.logsTitle}>Daily Logs</Text>
               <TouchableOpacity
-                style={styles.emptyLog}
-                onPress={() => {
-                  setSelectedDay(today);
-                  setTempData({ symptoms: [], moods: [], intimacy: [] });
-                  setModalMode("symptom");
-                }}
-              >
-                <Ionicons name="add" size={24} color={COLORS.textMuted} />
-                <Text style={styles.emptyLogText}>Add today's log</Text>
-              </TouchableOpacity>
-            );
-
-          const allItems = [
-            ...(todayData.intensity
-              ? [
-                  {
-                    label:
-                      FLOW.find((f) => f.key === todayData.intensity)?.label ??
-                      "",
-                    icon: "water-outline",
-                    color: COLORS.text,
-                  },
-                ]
-              : []),
-            ...todayData.symptoms.map((s) => ({
-              label:
-                SYMPTOMS.find((x) => x.key === s)?.label.toUpperCase() ?? "",
-              icon: "medical-outline",
-              color: COLORS.text,
-            })),
-            ...todayData.moods.map((m) => ({
-              label: EMOTIONS.find((x) => x.key === m)?.label ?? "",
-              icon: EMOTIONS.find((x) => x.key === m)?.icon ?? "happy-outline",
-              color: COLORS.text,
-            })),
-            ...todayData.intimacy.map((i) => ({
-              label: INTIMACY.find((x) => x.key === i)?.label ?? "",
-              icon: INTIMACY.find((x) => x.key === i)?.icon ?? "heart-outline",
-              color: COLORS.text,
-            })),
-          ];
-
-          const visibleItems = allItems.slice(0, 5);
-
-          return (
-            <View style={styles.logsGrid}>
-              {visibleItems.map((item, idx) => (
-                <View key={idx} style={styles.logItem}>
-                  <Ionicons
-                    name={item.icon as any}
-                    size={26}
-                    color={item.color}
-                  />
-                  <Text style={styles.logItemLabel}>{item.label}</Text>
-                </View>
-              ))}
-              <TouchableOpacity
-                style={styles.logItem}
                 onPress={() => {
                   setSelectedDay(today);
                   setTempData(
@@ -813,18 +662,107 @@ export default function CycleScreen() {
                   setModalMode("symptom");
                 }}
               >
-                <Ionicons name="add" size={26} color={COLORS.textMuted} />
-                <Text style={styles.logItemLabelMuted}>EDIT</Text>
+                <Text style={styles.logsEdit}>EDIT ENTRIES</Text>
               </TouchableOpacity>
             </View>
-          );
-        })()}
+
+            {(() => {
+              const activeDay = selectedDay ?? today;
+              const activeDayData = dayData[activeDay];
+
+              if (!activeDayData)
+                return (
+                  <TouchableOpacity
+                    style={styles.emptyLog}
+                    onPress={() => {
+                      setSelectedDay(activeDay);
+                      setTempData({ symptoms: [], moods: [], intimacy: [] });
+                      setModalMode("symptom");
+                    }}
+                  >
+                    <Ionicons name="add" size={24} color={COLORS.textMuted} />
+                    <Text style={styles.emptyLogText}>Add today's log</Text>
+                  </TouchableOpacity>
+                );
+
+              const allItems = [
+                ...(activeDayData.intensity
+                  ? [
+                      {
+                        label:
+                          FLOW.find((f) => f.key === activeDayData.intensity)
+                            ?.label ?? "",
+                        icon: "water-outline",
+                        color: COLORS.text,
+                      },
+                    ]
+                  : []),
+                ...activeDayData.symptoms.map((s) => ({
+                  label:
+                    SYMPTOMS.find((x) => x.key === s)?.label.toUpperCase() ??
+                    "",
+                  icon: "medical-outline",
+                  color: COLORS.text,
+                })),
+                ...activeDayData.moods.map((m) => ({
+                  label: EMOTIONS.find((x) => x.key === m)?.label ?? "",
+                  icon:
+                    EMOTIONS.find((x) => x.key === m)?.icon ?? "happy-outline",
+                  color: COLORS.text,
+                })),
+                ...activeDayData.intimacy.map((i) => ({
+                  label: INTIMACY.find((x) => x.key === i)?.label ?? "",
+                  icon:
+                    INTIMACY.find((x) => x.key === i)?.icon ?? "heart-outline",
+                  color: COLORS.text,
+                })),
+              ];
+
+              const visibleItems = allItems.slice(0, 5);
+
+              return (
+                <View style={styles.logsGrid}>
+                  {visibleItems.map((item, idx) => (
+                    <View key={idx} style={styles.logItem}>
+                      <Ionicons
+                        name={item.icon as any}
+                        size={26}
+                        color={item.color}
+                      />
+                      <Text style={styles.logItemLabel}>{item.label}</Text>
+                    </View>
+                  ))}
+                  <TouchableOpacity
+                    style={styles.logItem}
+                    onPress={() => {
+                      setSelectedDay(activeDay);
+                      setTempData(
+                        dayData[activeDay] ?? {
+                          symptoms: [],
+                          moods: [],
+                          intimacy: [],
+                        },
+                      );
+                      setModalMode("symptom");
+                    }}
+                  >
+                    <Ionicons name="add" size={26} color={COLORS.textMuted} />
+                    <Text style={styles.logItemLabelMuted}>EDIT</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })()}
+          </>
+        }
 
         {/* ADD PERIOD */}
         <TouchableOpacity
           style={styles.addPeriodBtn}
           onPress={() => {
-            setPeriodSelectDays([]);
+            const alreadySaved = Object.keys(dayData).filter(
+              (d) => dayData[d].intensity,
+            );
+            setPeriodSelectDays(alreadySaved);
             setModalMode("period");
           }}
         >
@@ -832,6 +770,24 @@ export default function CycleScreen() {
           <Text style={styles.addPeriodText}>add your period</Text>
         </TouchableOpacity>
       </ScrollView>
+      {/* Vymazanie dat  */}
+      {/* <TouchableOpacity
+        style={[
+          styles.addPeriodBtn,
+          { backgroundColor: COLORS.bgElevated, marginTop: 8 },
+        ]}
+        onPress={() => {
+          const starts = loadCycleStartDates();
+          Object.keys(dayData).forEach((date) => deleteCycleDay(date));
+          setDayData({});
+          setPredictions(null);
+          setStartDates([]);
+        }}
+      >
+        <Text style={[styles.addPeriodText, { color: COLORS.textMuted }]}>
+          reset data
+        </Text>
+      </TouchableOpacity> */}
 
       {/* ═══ MODAL – SYMPTÓMY ═══ */}
       <Modal
@@ -842,7 +798,6 @@ export default function CycleScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalSheet}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              {/* Modal header */}
               <View style={styles.modalHeader}>
                 <TouchableOpacity onPress={() => setModalMode(null)}>
                   <Ionicons name="close" size={22} color={COLORS.text} />
@@ -889,7 +844,6 @@ export default function CycleScreen() {
                   : ""}
               </Text>
 
-              {/* MENSTRUAL FLOW */}
               <Text style={styles.sectionLabel}>MENSTRUAL FLOW</Text>
               <View style={styles.flowGrid}>
                 {FLOW.map((item) => (
@@ -925,23 +879,10 @@ export default function CycleScreen() {
                     >
                       {item.label}
                     </Text>
-                    {item.key === "spotting" && (
-                      <Text
-                        style={[
-                          styles.flowSave,
-                          tempData.intensity === item.key && {
-                            color: COLORS.white,
-                          },
-                        ]}
-                      >
-                        SAVE
-                      </Text>
-                    )}
                   </TouchableOpacity>
                 ))}
               </View>
 
-              {/* EMOTIONS */}
               <Text style={styles.sectionLabel}>EMOTIONS</Text>
               <View style={styles.emotionGrid}>
                 {EMOTIONS.map((item) => (
@@ -976,7 +917,6 @@ export default function CycleScreen() {
                 ))}
               </View>
 
-              {/* INTIMACY */}
               <Text style={styles.sectionLabel}>INTIMACY</Text>
               <View style={styles.intimacyGrid}>
                 {INTIMACY.map((item) => (
@@ -1011,7 +951,6 @@ export default function CycleScreen() {
                 ))}
               </View>
 
-              {/* SYMPTOMS */}
               <Text style={styles.sectionLabel}>SYMPTOMS</Text>
               <View style={styles.symptomsWrap}>
                 {SYMPTOMS.map((item) => (
@@ -1037,7 +976,6 @@ export default function CycleScreen() {
                 ))}
               </View>
 
-              {/* NOTE */}
               <Text style={styles.sectionLabel}>NOTE</Text>
               <TextInput
                 style={styles.noteInput}
@@ -1111,8 +1049,14 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
   scroll: { paddingBottom: 60 },
 
-  // HEADER
-  header: { paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 56,
+    paddingBottom: 16,
+    gap: 12,
+  },
   logoBox: {
     width: 44,
     height: 44,
@@ -1126,8 +1070,12 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
     color: COLORS.text,
   },
+  headerDate: {
+    fontSize: 15,
+    fontFamily: "Inter_400Regular",
+    color: COLORS.textMuted,
+  },
 
-  // KRUH
   circleContainer: {
     alignSelf: "center",
     marginTop: 8,
@@ -1142,18 +1090,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 4,
   },
-
-  circle: {
-    width: CIRCLE_SIZE,
-    height: CIRCLE_SIZE,
-    borderRadius: CIRCLE_SIZE / 2,
-    borderWidth: 3,
-    borderColor: COLORS.bgElevated,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    gap: 4,
-  },
   circlePhaseNum: {
     fontSize: 14,
     fontFamily: "Inter_500Medium",
@@ -1161,15 +1097,11 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   circlePhaseName: {
-    fontSize: 23,
+    fontSize: 20,
     fontFamily: "BonaNova_700Bold",
     color: COLORS.text,
     letterSpacing: 1,
-  },
-  circleDay: {
-    fontSize: 24,
-    fontFamily: "Inter_100Thin",
-    color: COLORS.text,
+    textAlign: "center",
   },
   circleOvBadge: {
     marginTop: 8,
@@ -1185,7 +1117,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 
-  // TIP
   tipsRow: {
     flexDirection: "row",
     marginHorizontal: 20,
@@ -1213,7 +1144,6 @@ const styles = StyleSheet.create({
     textAlign: "justify",
   },
 
-  // KALENDÁR TOGGLE
   calendarToggle: {
     flexDirection: "row",
     alignItems: "center",
@@ -1259,55 +1189,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
 
-  // DAY PREVIEW
-  dayPreview: {
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.bgElevated,
-    marginTop: 8,
-  },
-  dayPreviewHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  dayPreviewDate: {
-    fontSize: 13,
-    fontFamily: "Inter_600SemiBold",
-    color: COLORS.text,
-  },
-  dayPreviewEdit: {
-    backgroundColor: COLORS.period,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 20,
-  },
-  dayPreviewEditText: {
-    fontSize: 11,
-    fontFamily: "Inter_600SemiBold",
-    color: COLORS.white,
-  },
-  dayPreviewEmpty: {
-    fontSize: 12,
-    fontFamily: "Inter_400Regular",
-    color: COLORS.textMuted,
-    fontStyle: "italic",
-  },
-  dayPreviewTags: {
-    flexDirection: "row",
-    gap: 6,
-  },
-  previewTag: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  previewTagText: {
-    fontSize: 11,
-    fontFamily: "Inter_400Regular",
-  },
   dayPreviewGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -1317,8 +1198,17 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.bgElevated,
     marginTop: 8,
   },
+  dayPreviewItem: {
+    width: (width - 80) / 3,
+    aspectRatio: 1,
+    backgroundColor: COLORS.bgElevated,
+    borderRadius: 16,
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
 
-  // DAILY LOGS
   logsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1329,7 +1219,7 @@ const styles = StyleSheet.create({
   },
   logsTitle: {
     fontSize: 18,
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "BonaNova_700Bold",
     color: COLORS.text,
   },
   logsEdit: {
@@ -1382,7 +1272,6 @@ const styles = StyleSheet.create({
     color: COLORS.textMuted,
   },
 
-  // ADD PERIOD
   addPeriodBtn: {
     flexDirection: "row",
     alignItems: "center",
@@ -1400,7 +1289,6 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
 
-  // MODALY
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.6)",
@@ -1459,11 +1347,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  // FLOW GRID
-  flowGrid: {
-    flexDirection: "row",
-    gap: 8,
-  },
+  flowGrid: { flexDirection: "row", gap: 8 },
   flowItem: {
     flex: 1,
     backgroundColor: COLORS.bgElevated,
@@ -1486,19 +1370,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   flowLabelActive: { color: COLORS.white },
-  flowSave: {
-    fontSize: 8,
-    fontFamily: "Inter_700Bold",
-    color: COLORS.textMuted,
-    letterSpacing: 1,
-  },
 
-  // EMOTION GRID
-  emotionGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
+  emotionGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   emotionItem: {
     width: (width - 96) / 5,
     backgroundColor: COLORS.bgElevated,
@@ -1509,9 +1382,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
   },
-  emotionItemActive: {
-    borderColor: COLORS.symptom,
-  },
+  emotionItemActive: { borderColor: COLORS.symptom },
   emotionLabel: {
     fontSize: 8,
     fontFamily: "Inter_600SemiBold",
@@ -1521,12 +1392,7 @@ const styles = StyleSheet.create({
   },
   emotionLabelActive: { color: COLORS.symptom },
 
-  // INTIMACY GRID
-  intimacyGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
+  intimacyGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   intimacyItem: {
     width: (width - 64) / 2,
     backgroundColor: COLORS.bgElevated,
@@ -1538,9 +1404,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
   },
-  intimacyItemActive: {
-    borderColor: COLORS.intimacy,
-  },
+  intimacyItemActive: { borderColor: COLORS.intimacy },
   intimacyLabel: {
     fontSize: 11,
     fontFamily: "Inter_600SemiBold",
@@ -1550,12 +1414,7 @@ const styles = StyleSheet.create({
   },
   intimacyLabelActive: { color: "#C2858C" },
 
-  // SYMPTOMS CHIPS
-  symptomsWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
+  symptomsWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   symptomChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -1573,11 +1432,8 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     color: COLORS.textMuted,
   },
-  symptomChipTextActive: {
-    color: COLORS.text,
-  },
+  symptomChipTextActive: { color: COLORS.text },
 
-  // NOTE
   noteInput: {
     backgroundColor: COLORS.bgElevated,
     borderRadius: 12,
@@ -1589,7 +1445,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
 
-  // SAVE
   saveBtn: {
     backgroundColor: COLORS.period,
     padding: 16,
