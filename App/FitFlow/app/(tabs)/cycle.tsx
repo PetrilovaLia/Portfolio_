@@ -1047,7 +1047,7 @@ export default function CycleScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
-  scroll: { paddingBottom: 60 },
+  scroll: { paddingBottom: 120 },
 
   header: {
     flexDirection: "row",
@@ -1279,7 +1279,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginHorizontal: 20,
     marginTop: 20,
-    backgroundColor: COLORS.period,
+    backgroundColor: COLORS.bgElevated,
     paddingVertical: 16,
     borderRadius: 32,
   },
@@ -1446,7 +1446,7 @@ const styles = StyleSheet.create({
   },
 
   saveBtn: {
-    backgroundColor: COLORS.period,
+    backgroundColor: COLORS.text,
     padding: 16,
     borderRadius: 28,
     alignItems: "center",
@@ -1454,7 +1454,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   saveBtnText: {
-    color: COLORS.white,
+    color: COLORS.bgElevated,
     fontSize: 15,
     fontFamily: "Inter_600SemiBold",
   },

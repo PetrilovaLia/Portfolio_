@@ -1,40 +1,41 @@
-
 import argparse
 import time
+
+from src.logger import get_logger
 from src.scraper import scrape, save_raw
 from src.transform import transform, save_clean
 
+log = get_logger("pipeline")
 
-def run(days: int = 30, skip_load: bool = False) -> None:
+
+def run(days=30, skip_load=False):
     start = time.perf_counter()
-    print("=" * 50)
-    print("  Slovak Job Market Tracker — ETL Pipeline")
-    print("=" * 50)
+    log.info("=" * 40)
+    log.info("Slovak Job Market Tracker — ETL Pipeline")
+    log.info("=" * 40)
 
-    # Step 1 — Extract
     t0 = time.perf_counter()
+    log.info("Krok 1/3 — Extract")
     raw = scrape(days_back=days)
     save_raw(raw)
-    print(f"  Extract: {time.perf_counter() - t0:.2f}s\n")
+    log.info(f"Extract dokončený za {time.perf_counter() - t0:.2f}s")
 
-    # Step 2 — Transform
     t0 = time.perf_counter()
+    log.info("Krok 2/3 — Transform")
     jobs, skills = transform(raw)
     save_clean(jobs, skills)
-    print(f"  Transform: {time.perf_counter() - t0:.2f}s\n")
+    log.info(f"Transform dokončený za {time.perf_counter() - t0:.2f}s")
 
-    # Step 3 — Load (requires running PostgreSQL)
     if not skip_load:
         from src.load import run as load_run
         t0 = time.perf_counter()
+        log.info("Krok 3/3 — Load")
         load_run()
-        print(f"  Load: {time.perf_counter() - t0:.2f}s\n")
+        log.info(f"Load dokončený za {time.perf_counter() - t0:.2f}s")
     else:
-        print("  Load: skipped (--skip-load)\n")
+        log.info("Krok 3/3 — Load preskočený (--skip-load)")
 
-    elapsed = time.perf_counter() - start
-    print(f"Pipeline completed in {elapsed:.2f}s")
-    print("=" * 50)
+    log.info(f"Pipeline dokončená za {time.perf_counter() - start:.2f}s")
 
 
 if __name__ == "__main__":

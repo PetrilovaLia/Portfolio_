@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slovak Job Market Tracker</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      color: #1a1a2e;
+      padding: 2rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+
+    .metric-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .metric-card .value {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .metric-card .sub {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .chart-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+
+    .chart-card h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      margin-bottom: 1.25rem;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Slovak Job Market Tracker</h1>
+  <p id="subtitle">Načítavam dáta...</p>
+</header>
+
+<div class="metrics" id="metrics"></div>
+
+<div class="charts">
+  <div class="chart-card">
+    <h2>Top technológie</h2>
+    <div class="chart-wrap" style="height: 300px;">
+      <canvas id="chartSkills"></canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h2>Vývoj ponúk (posledných 14 dní)</h2>
+    <div class="chart-wrap" style="height: 300px;">
+      <canvas id="chartTrend"></canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h2>Priemerný plat podľa mesta (€)</h2>
+    <div class="chart-wrap" style="height: 300px;">
+      <canvas id="chartSalary"></canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h2>Rozdelenie pracovných pozícií</h2>
+    <div class="chart-wrap" style="height: 300px;">
+      <canvas id="chartTitles"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  const COLORS = [
+    '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
+    '#8b5cf6', '#06b6d4', '#f97316', '#6366f1',
+  ];
+
+  async function loadData() {
+    const [jobsRes, skillsRes] = await Promise.all([
+      fetch('../data/clean_jobs.json'),
+      fetch('../data/clean_skills.json'),
+    ]);
+    const jobs   = await jobsRes.json();
+    const skills = await skillsRes.json();
+    return { jobs, skills };
+  }
+
+  function renderMetrics(jobs) {
+    const avgSalary = Math.round(jobs.reduce((s, j) => s + j.salary_mid, 0) / jobs.length);
+
+    const skillCount = {};
+    jobs.forEach(j => {
+      // top skill je ten čo sa najviac opakuje — pozrieme cez skills JSON
+    });
+
+    const metricsEl = document.getElementById('metrics');
+    const cards = [
+      { label: 'Celkové ponuky',    value: jobs.length,        sub: 'posledných 30 dní' },
+      { label: 'Priemerný plat',    value: `${avgSalary} €`,   sub: 'salary midpoint' },
+      { label: 'Počet firiem',      value: new Set(jobs.map(j => j.company)).size, sub: 'unikátnych zamestnávateľov' },
+      { label: 'Počet miest',       value: new Set(jobs.map(j => j.location)).size, sub: 'lokácií' },
+    ];
+
+    metricsEl.innerHTML = cards.map(c => `
+      <div class="metric-card">
+        <div class="label">${c.label}</div>
+        <div class="value">${c.value}</div>
+        <div class="sub">${c.sub}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderSkillsChart(skills) {
+    const count = {};
+    skills.forEach(s => { count[s.skill] = (count[s.skill] || 0) + 1; });
+    const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+    new Chart(document.getElementById('chartSkills'), {
+      type: 'bar',
+      data: {
+        labels: sorted.map(([k]) => k),
+        datasets: [{
+          data: sorted.map(([, v]) => v),
+          backgroundColor: COLORS,
+          borderRadius: 5,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: '#f3f4f6' } },
+        }
+      }
+    });
+  }
+
+  function renderTrendChart(jobs) {
+    const count = {};
+    jobs.forEach(j => {
+      count[j.posted_date] = (count[j.posted_date] || 0) + 1;
+    });
+    const sorted = Object.entries(count).sort((a, b) => a[0].localeCompare(b[0])).slice(-14);
+
+    new Chart(document.getElementById('chartTrend'), {
+      type: 'line',
+      data: {
+        labels: sorted.map(([d]) => d.slice(5)),   // MM-DD
+        datasets: [{
+          data: sorted.map(([, v]) => v),
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59,130,246,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointBackgroundColor: '#3b82f6',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: '#f3f4f6' }, min: 0 },
+        }
+      }
+    });
+  }
+
+  function renderSalaryChart(jobs) {
+    const salaries = {};
+    const counts   = {};
+    jobs.forEach(j => {
+      salaries[j.location] = (salaries[j.location] || 0) + j.salary_mid;
+      counts[j.location]   = (counts[j.location]   || 0) + 1;
+    });
+    const avgs = Object.entries(salaries)
+      .map(([loc, total]) => [loc, Math.round(total / counts[loc])])
+      .sort((a, b) => b[1] - a[1]);
+
+    new Chart(document.getElementById('chartSalary'), {
+      type: 'bar',
+      data: {
+        labels: avgs.map(([l]) => l),
+        datasets: [{
+          data: avgs.map(([, v]) => v),
+          backgroundColor: '#10b981',
+          borderRadius: 5,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: '#f3f4f6' }, min: 0 },
+        }
+      }
+    });
+  }
+
+  function renderTitlesChart(jobs) {
+    const count = {};
+    jobs.forEach(j => { count[j.title] = (count[j.title] || 0) + 1; });
+    const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]);
+
+    new Chart(document.getElementById('chartTitles'), {
+      type: 'doughnut',
+      data: {
+        labels: sorted.map(([k]) => k),
+        datasets: [{
+          data: sorted.map(([, v]) => v),
+          backgroundColor: COLORS,
+          borderWidth: 2,
+          borderColor: '#fff',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { font: { size: 11 }, boxWidth: 12, padding: 10 }
+          }
+        }
+      }
+    });
+  }
+
+  async function init() {
+    try {
+      const { jobs, skills } = await loadData();
+      const today = new Date().toLocaleDateString('sk-SK');
+      document.getElementById('subtitle').textContent =
+        `IT sektor · aktualizované ${today} · ${jobs.length} ponúk`;
+
+      renderMetrics(jobs);
+      renderSkillsChart(skills);
+      renderTrendChart(jobs);
+      renderSalaryChart(jobs);
+      renderTitlesChart(jobs);
+    } catch (e) {
+      document.getElementById('subtitle').textContent =
+        'Chyba pri načítaní dát. Skontroluj či existujú súbory data/clean_jobs.json a data/clean_skills.json.';
+      console.error(e);
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
